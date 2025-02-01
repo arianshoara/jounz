@@ -1,0 +1,47 @@
+/* استایل منو */
+.menu {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+
+.menu ul {
+    list-style: none;
+    padding: 0;
+}
+
+.menu li {
+    display: inline-block;
+    margin-left: 20px;
+}
+
+.menu a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* صفحه اخبار */
+.hidden {
+    display: none;
+}
+
+#news-page {
+    padding: 2em;
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+}
+
+#news-form input, #news-form textarea {
+    width: 100%;
+    margin: 10px 0;
+    padding: 10px;
+}
+
+#news-form button {
+    background: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+}
