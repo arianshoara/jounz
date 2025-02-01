@@ -17,15 +17,29 @@
 <!-- Main -->
 <div id="main">
 
-    <!-- Header -->
-    <header id="header">
+        <!-- Header -->
+      <header id="header">
         <h1>به سایت بچهای جون خوش اومدی</h1>
         <p>(باهم بودیم و باهم میمانیم)</p>
+        
+        <!-- منوی جدید -->
+        <nav class="menu">
+            <ul>
+                <li><a href="#main">Home</a></li>
+                <li><a href="#news-page">اخبار گروه جون</a></li>
+            </ul>
+        </nav>
+
+        <!-- آیکون‌های شبکه‌های اجتماعی -->
         <ul class="icons">
             <li><a href="https://t.me/ariansho" class="icon brands fa-telegram"><span class="label">Telegram</span></a></li>
             <li><a href="https://www.instagram.com/arian__sho2" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
+            <li><a href="https://twitter.com/Arian75004506" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
+            <li><a href="https://github.com/arianshoara" class="icon brands fa-github"><span class="label">Github</span></a></li>
+            <li><a href="mailto:arian311380@gmail.com" class="icon fa-envelope"><span class="label">Email</span></a></li>
         </ul>
     </header>
+
 
     <!-- Thumbnail -->
     <section id="thumbnails">
@@ -123,6 +137,21 @@
             <li>Design: <a href="http://html5up.net">HTML5 UP</a>.</li>
         </ul>
     </footer>
+
+        <!-- صفحه اخبار -->
+    <section id="news-page" class="hidden">
+        <h2>اخبار گروه جون</h2>
+    
+        <!-- فرم نوشتن خبر -->
+        <form id="news-form">
+            <input type="text" id="news-title" placeholder="عنوان خبر" required>
+            <textarea id="news-content" placeholder="متن خبر..." required></textarea>
+            <button type="submit">ثبت خبر</button>
+        </form>
+    
+        <!-- لیست اخبار -->
+        <div id="news-list"></div>
+    </section>
 
 </div>
 
