@@ -1,3 +1,24 @@
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+import { getDatabase, ref, push, onChildAdded } from "firebase/database";
+
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyD8sqRoCqN9Xx-XGhtKSrjFukT8uPI7Bl8",
+  authDomain: "jounzarian.firebaseapp.com",
+  projectId: "jounzarian",
+  storageBucket: "jounzarian.firebasestorage.app",
+  messagingSenderId: "917000531806",
+  appId: "1:917000531806:web:6922c0fe593882921329cf",
+  measurementId: "G-29GJ09DXWT"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+const database = getDatabase(app);
+
 // نمایش/پنهان کردن صفحات
 document.querySelectorAll('.menu a').forEach(link => {
     link.addEventListener('click', (e) => {
@@ -18,10 +39,9 @@ document.getElementById('news-form').addEventListener('submit', (e) => {
 
     const newsItem = { title, content };
 
-    // ذخیره خبر در localStorage
-    let newsList = JSON.parse(localStorage.getItem('newsList')) || [];
-    newsList.push(newsItem);
-    localStorage.setItem('newsList', JSON.stringify(newsList));
+    // ذخیره خبر در Firebase
+    const newsRef = ref(database, 'news/');
+    push(newsRef, newsItem);
 
     // نمایش خبر جدید
     displayNewsItem(newsItem);
@@ -32,8 +52,9 @@ document.getElementById('news-form').addEventListener('submit', (e) => {
 
 // نمایش اخبار ذخیره شده هنگام بارگذاری صفحه
 document.addEventListener('DOMContentLoaded', () => {
-    let newsList = JSON.parse(localStorage.getItem('newsList')) || [];
-    newsList.forEach(newsItem => {
+    const newsRef = ref(database, 'news/');
+    onChildAdded(newsRef, (snapshot) => {
+        const newsItem = snapshot.val();
         displayNewsItem(newsItem);
     });
 });
