@@ -19,42 +19,83 @@
 <body>
     <div class="container">
         <h1>آخرین اخبار</h1>
+        <form id="news-form">
+            <input type="text" id="news-title" placeholder="عنوان خبر" required>
+            <textarea id="news-content" placeholder="متن خبر..." required></textarea>
+            <button type="submit">ثبت خبر</button>
+        </form>
         <div id="news-list"></div>
     </div>
 
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-analytics.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
     <script>
-        const newsData = [
-            { title: "خبر اول", image: "https://via.placeholder.com/120", description: "توضیح کوتاه خبر اول...", link: "#" },
-            { title: "خبر دوم", image: "https://via.placeholder.com/120", description: "توضیح کوتاه خبر دوم...", link: "#" },
-            { title: "خبر سوم", image: "https://via.placeholder.com/120", description: "توضیح کوتاه خبر سوم...", link: "#" }
-        ];
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyD8sqRoCqN9Xx-XGhtKSrjFukT8uPI7Bl8",
+            authDomain: "jounzarian.firebaseapp.com",
+            databaseURL: "https://jounzarian-default-rtdb.firebaseio.com",
+            projectId: "jounzarian",
+            storageBucket: "jounzarian.appspot.com",
+            messagingSenderId: "917000531806",
+            appId: "1:917000531806:web:6922c0fe593882921329cf",
+            measurementId: "G-29GJ09DXWT"
+        };
 
-        const newsList = document.getElementById("news-list");
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const analytics = firebase.analytics(app);
+        const database = firebase.database(app);
 
-        newsData.forEach(news => {
-            const newsItem = document.createElement("div");
-            newsItem.classList.add("news-item");
-            newsItem.innerHTML = `
-                <img src="${news.image}" alt="${news.title}">
+        // Manage news form submission
+        document.getElementById('news-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const title = document.getElementById('news-title').value;
+            const content = document.getElementById('news-content').value;
+
+            const newsItem = { title, content };
+
+            // Save news item to Firebase
+            const newsRef = database.ref('news/');
+            newsRef.push(newsItem);
+
+            // Display new news item
+            displayNewsItem(newsItem);
+
+            // Reset form
+            document.getElementById('news-form').reset();
+        });
+
+        // Display stored news items on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            const newsRef = database.ref('news/');
+            newsRef.on('child_added', (snapshot) => {
+                const newsItem = snapshot.val();
+                displayNewsItem(newsItem);
+            });
+        });
+
+        function displayNewsItem(newsItem) {
+            const newsDiv = document.createElement('div');
+            newsDiv.classList.add('news-item');
+            newsDiv.innerHTML = `
+                <img src="https://via.placeholder.com/120" alt="${newsItem.title}">
                 <div>
-                    <h2>${news.title}</h2>
-                    <p>${news.description}</p>
-                    <a href="${news.link}"><button class="read-more">بیشتر بخوانید</button></a>
+                    <h2>${newsItem.title}</h2>
+                    <p>${newsItem.content}</p>
                 </div>
             `;
-            newsList.appendChild(newsItem);
-        });
-    
-	 <script src="assets/js/jquery.min.js"></script>
+            document.getElementById('news-list').appendChild(newsDiv);
+        }
+    </script>
+
+    <script src="assets/js/jquery.min.js"></script>
     <script src="assets/js/jquery.scrollex.min.js"></script>
     <script src="assets/js/jquery.scrolly.min.js"></script>
     <script src="assets/js/browser.min.js"></script>
     <script src="assets/js/breakpoints.min.js"></script>
     <script src="assets/js/util.js"></script>
     <script src="assets/js/main.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-analytics.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
-    <script src="assets/js/script.js"></script>
 </body>
 </html>
