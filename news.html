@@ -75,21 +75,16 @@
 
             const newsItem = { title, content };
 
-            // ذخیره داده در Firebase
-            import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+            // Save data to Firebase
+            const newsRef = firebase.database().ref('news/');
+            newsRef.push(newsItem)
+                .then(() => console.log("✅ ذخیره‌سازی موفق بود"))
+                .catch((error) => console.error("❌ خطا در ذخیره‌سازی:", error));
 
-            const database = getDatabase();
-              const newsRef = ref(database, 'news/');
-                push(newsRef, {
-                    title: "خبر تستی",
-            content: "این یک تست برای ذخیره‌سازی است"
-                }).then(() => console.log("✅ ذخیره‌سازی موفق بود"))
-              .catch((error) => console.error("❌ خطا در ذخیره‌سازی:", error));
-
-            // نمایش خبر جدید
+            // Display new news item
             displayNewsItem(newsItem);
 
-            // پاک کردن فرم
+            // Reset form
             document.getElementById('news-form').reset();
         });
 
