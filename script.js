@@ -12,6 +12,7 @@ const firebaseConfig = {
     messagingSenderId: "917000531806",
     appId: "1:917000531806:web:6922c0fe593882921329cf",
     measurementId: "G-29GJ09DXWT"
+    databaseURL: "https://jounzarian-default-rtdb.firebaseio.com"
 };
 
 // Initialize Firebase
@@ -48,6 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function displayNewsItem(newsItem) {
+    console.log("News Item from Firebase:", newsItem);
     const newsDiv = document.createElement('div');
     newsDiv.classList.add('news-item');
     newsDiv.innerHTML = `
