@@ -1,76 +1,47 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-import { getDatabase, ref, push, onChildAdded } from "firebase/database";
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اخبار روز</title>
+    <style>
+        body { font-family: Arial, sans-serif; direction: rtl; background-color: #f4f4f4; margin: 0; padding: 0; }
+        .container { width: 80%; margin: auto; padding: 20px; background: white; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
+        h1 { text-align: center; }
+        .news-item { display: flex; align-items: center; background: #fff; margin: 10px 0; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .news-item img { width: 120px; height: 80px; border-radius: 5px; margin-left: 15px; }
+        .news-item h2 { margin: 0; font-size: 18px; }
+        .news-item p { font-size: 14px; color: #555; }
+        .read-more { background: #007bff; color: white; padding: 8px 12px; border: none; cursor: pointer; border-radius: 5px; }
+        .read-more:hover { background: #0056b3; }
+        .news-form { margin-bottom: 20px; }
+        .news-form input, .news-form textarea, .news-form button { display: block; width: 100%; margin: 10px 0; padding: 10px; }
+        .back-home { display: block; width: 100px; margin: 20px auto; padding: 10px; text-align: center; background: #dc3545; color: white; text-decoration: none; border-radius: 5px; }
+        .back-home:hover { background: #c82333; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>آخرین اخبار</h1>
+        <form class="news-form" id="news-form">
+            <input type="text" id="news-title" placeholder="عنوان خبر" required>
+            <textarea id="news-content" placeholder="متن خبر..." required></textarea>
+            <button type="submit">ثبت خبر</button>
+        </form>
+        <div id="news-list"></div>
+        <a href="index.html" class="back-home">بازگشت</a>
+    </div>
 
-// Your web app's Firebase configuration
-const firebaseConfig = {
-    apiKey: "AIzaSyD8sqRoCqN9Xx-XGhtKSrjFukT8uPI7Bl8",
-    authDomain: "jounzarian.firebaseapp.com",
-    projectId: "jounzarian",
-    storageBucket: "jounzarian.appspot.com",
-    messagingSenderId: "917000531806",
-    appId: "1:917000531806:web:6922c0fe593882921329cf",
-    measurementId: "G-29GJ09DXWT",
-    databaseURL: "https://jounzarian-default-rtdb.firebaseio.com"
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-const database = getDatabase(app);
-
-// Select DOM elements
-const newsForm = document.getElementById('news-form');
-const newsTitle = document.getElementById('news-title');
-const newsContent = document.getElementById('news-content');
-const newsList = document.getElementById('news-list');
-
-// Function to display news
-function displayNewsItem(newsItem) {
-    console.log("News Item from Firebase:", newsItem);
-    const newsDiv = document.createElement('div');
-    newsDiv.classList.add('news-item');
-    newsDiv.innerHTML = `
-        <img src="https://via.placeholder.com/120" alt="${newsItem.title}">
-        <div>
-            <h2>${newsItem.title}</h2>
-            <p>${newsItem.content}</p>
-        </div>
-    `;
-    newsList.appendChild(newsDiv);
-}
-
-// Submit news form
-newsForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-
-    const title = newsTitle.value.trim();
-    const content = newsContent.value.trim();
-
-    if (title && content) {
-        const newsItem = { title, content };
-
-        // Save to Firebase
-        const newsRef = ref(database, 'news/');
-        push(newsRef, newsItem).then(() => {
-            console.log("News saved successfully!");
-        }).catch((error) => {
-            console.error("Error saving news:", error);
-        });
-
-        // Reset form
-        newsForm.reset();
-    }
-});
-
-// Load news on page load
-document.addEventListener('DOMContentLoaded', () => {
-    const newsRef = ref(database, 'news/');
-    newsList.innerHTML = ""; // جلوگیری از نمایش تکراری
-
-    onChildAdded(newsRef, (snapshot) => {
-        const newsItem = snapshot.val();
-        displayNewsItem(newsItem);
-    });
-});
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-analytics.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
+    <script src="assets/js/script.js"></script> <!-- Include script.js -->
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/jquery.scrollex.min.js"></script>
+    <script src="assets/js/jquery.scrolly.min.js"></script>
+    <script src="assets/js/browser.min.js"></script>
+    <script src="assets/js/breakpoints.min.js"></script>
+    <script src="assets/js/util.js"></script>
+    <script src="assets/js/main.js"></script>
+</body>
+</html>
