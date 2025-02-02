@@ -162,12 +162,27 @@
 <script src="assets/js/breakpoints.min.js"></script>
 <script src="assets/js/main.js"></script>
 <script src="assets/js/script.js"></script> <!-- اضافه کردن فایل script.js -->
+<script type="module" src="script.js"></script>
+
 
     <!-- Firebase SDKs -->
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-analytics.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
-<script src="assets/js/script.js"></script> <!-- اضافه کردن فایل script.js -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js"></script>
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyD8sqRoCqN9Xx-XGhtKSrjFukT8uPI7Bl8",
+        authDomain: "jounzarian.firebaseapp.com",
+        databaseURL: "https://jounzarian-default-rtdb.firebaseio.com",
+        projectId: "jounzarian",
+        storageBucket: "jounzarian.appspot.com",
+        messagingSenderId: "917000531806",
+        appId: "1:917000531806:web:6922c0fe593882921329cf",
+        measurementId: "G-29GJ09DXWT"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+</script>
 
 </body>
 </html>
