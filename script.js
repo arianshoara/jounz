@@ -12,59 +12,72 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = firebase.initializeApp(firebaseConfig);
-const database = firebase.database(app);
+const database = firebase.database();
 
-// Function to display news item
-function displayNewsItem(newsItem) {
-    const newsDiv = document.createElement('div');
-    newsDiv.classList.add('news-item');
-    newsDiv.innerHTML = `
-        <img src="https://via.placeholder.com/120" alt="${newsItem.title}">
-        <div>
-            <h2>${newsItem.title}</h2>
-            <p>${newsItem.content}</p>
-        </div>
-    `;
-    document.getElementById('news-list').appendChild(newsDiv);
-}
+// Get elements
+const newsForm = document.getElementById('news-form');
+const newsList = document.getElementById('news-list');
 
-// Handle form submission to store the news in Firebase
-document.getElementById('news-form').addEventListener('submit', function(e) {
-    e.preventDefault(); // Prevent the default form submission behavior
+// Form submit handler
+newsForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  
+  const title = document.getElementById('news-title').value;
+  const content = document.getElementById('news-content').value;
 
-    // Get values from the input fields
-    const title = document.getElementById('news-title').value;
-    const content = document.getElementById('news-content').value;
-
-    // Validate inputs
-    if (title.trim() === "" || content.trim() === "") {
-        alert("لطفاً عنوان و متن خبر را وارد کنید.");
-        return;
-    }
-
-    // Create a news item object
-    const newsItem = { title, content };
-
-    // Push the new news item to Firebase
-    const newsRef = firebase.database().ref('news/');
-    newsRef.push(newsItem)
-        .then(() => {
-            console.log("✅ ذخیره‌سازی موفق بود");
-            // Display the new news item on the page
-            displayNewsItem(newsItem);
-            // Clear the form
-            document.getElementById('news-form').reset();
-        })
-        .catch((error) => {
-            console.error("❌ خطا در ذخیره‌سازی:", error);
-        });
+  // Push data to Firebase
+  const newPostRef = database.ref('news').push();
+  newPostRef.set({
+    title: title,
+    content: content,
+    timestamp: firebase.database.ServerValue.TIMESTAMP
+  })
+  .then(() => {
+    newsForm.reset();
+  })
+  .catch((error) => {
+    console.error('Error saving data:', error);
+  });
 });
 
-// Load existing news from Firebase and display them on the page
-document.addEventListener('DOMContentLoaded', function() {
-    const newsRef = firebase.database().ref('news/');
-    newsRef.on('child_added', function(snapshot) {
-        const newsItem = snapshot.val();
-        displayNewsItem(newsItem);
+// Fetch and display data
+database.ref('news').orderByChild('timestamp').on('value', (snapshot) => {
+  newsList.innerHTML = ''; // Clear previous content
+  
+  snapshot.forEach((childSnapshot) => {
+    const newsItem = childSnapshot.val();
+    const key = childSnapshot.key;
+    
+    // Create HTML elements
+    const itemDiv = document.createElement('div');
+    itemDiv.className = 'news-item';
+    
+    const contentDiv = document.createElement('div');
+    
+    const title = document.createElement('h2');
+    title.textContent = newsItem.title;
+    
+    const content = document.createElement('p');
+    content.textContent = newsItem.content;
+    
+    const readMore = document.createElement('button');
+    readMore.className = 'read-more';
+    readMore.textContent = 'مطالعه بیشتر';
+    
+    // Add click handler for read more
+    readMore.addEventListener('click', () => {
+      // Implement your read more functionality
+      console.log('Read more clicked for:', key);
     });
+    
+    // Assemble elements
+    contentDiv.appendChild(title);
+    contentDiv.appendChild(content);
+    contentDiv.appendChild(readMore);
+    
+    itemDiv.appendChild(contentDiv);
+    newsList.appendChild(itemDiv);
+  });
+}, (error) => {
+  console.error('Data retrieval failed:', error);
 });
