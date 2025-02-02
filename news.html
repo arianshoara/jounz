@@ -32,39 +32,83 @@
         <a href="index.html" class="back-home">بازگشت</a>
     </div>
 
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-analytics.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
     <script>
-        const newsList = document.getElementById("news-list");
-        const newsForm = document.getElementById("news-form");
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "API_KEY",
+            authDomain: "jounzarian.firebaseapp.com",
+            databaseURL: "https://jounzarian-default-rtdb.firebaseio.com",
+            projectId: "jounzarian",
+            storageBucket: "jounzarian.appspot.com",
+            messagingSenderId: "917000531806",
+            appId: "1:917000531806:web:6922c0fe593882921329cf",
+            measurementId: "G-29GJ09DXWT"
+        };
 
-        const newsData = [
-            { title: "خبر اول", image: "https://via.placeholder.com/120", description: "توضیح کوتاه خبر اول..." },
-            { title: "خبر دوم", image: "https://via.placeholder.com/120", description: "توضیح کوتاه خبر دوم..." },
-            { title: "خبر سوم", image: "https://via.placeholder.com/120", description: "توضیح کوتاه خبر سوم..." }
-        ];
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const analytics = firebase.analytics(app);
+        const database = firebase.database(app);
 
-        function displayNews(newsItem) {
-            const newsElement = document.createElement("div");
-            newsElement.classList.add("news-item");
-            newsElement.innerHTML = `
-                <img src="${newsItem.image}" alt="${newsItem.title}">
+        // Function to display news items
+        function displayNewsItem(newsItem) {
+            const newsDiv = document.createElement('div');
+            newsDiv.classList.add('news-item');
+            newsDiv.innerHTML = `
+                <img src="https://via.placeholder.com/120" alt="${newsItem.title}">
                 <div>
                     <h2>${newsItem.title}</h2>
-                    <p>${newsItem.description}</p>
+                    <p>${newsItem.content}</p>
                 </div>
             `;
-            newsList.appendChild(newsElement);
+            document.getElementById('news-list').appendChild(newsDiv);
         }
 
-        newsData.forEach(displayNews);
+        // Manage news form submission
+        document.getElementById('news-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const title = document.getElementById('news-title').value;
+            const content = document.getElementById('news-content').value;
 
-        newsForm.addEventListener("submit", (event) => {
-            event.preventDefault();
-            const title = document.getElementById("news-title").value;
-            const description = document.getElementById("news-content").value;
-            const newsItem = { title, image: "https://via.placeholder.com/120", description };
-            displayNews(newsItem);
-            newsForm.reset();
+            const newsItem = { title, content };
+
+            // ذخیره داده در Firebase
+            const newsRef = firebase.database().ref('news/');
+            newsRef.push(newsItem)
+                .then(() => console.log("خبر با موفقیت ذخیره شد!"))
+                .catch((error) => console.error("خطا در ذخیره‌سازی خبر:", error));
+
+            // نمایش خبر جدید
+            displayNewsItem(newsItem);
+
+            // پاک کردن فرم
+            document.getElementById('news-form').reset();
         });
+
+        // Display stored news items on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            const newsRef = firebase.database().ref('news/');
+            newsRef.on('child_added', (snapshot) => {
+                const newsItem = snapshot.val();
+                displayNewsItem(newsItem);
+            });
+        });
+
+        // Function to go back to home
+        function goHome() {
+            window.location.href = '/';
+        }
     </script>
+
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/jquery.scrollex.min.js"></script>
+    <script src="assets/js/jquery.scrolly.min.js"></script>
+    <script src="assets/js/browser.min.js"></script>
+    <script src="assets/js/breakpoints.min.js"></script>
+    <script src="assets/js/util.js"></script>
+    <script src="assets/js/main.js"></script>
 </body>
 </html>
