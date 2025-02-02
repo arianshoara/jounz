@@ -165,11 +165,11 @@
 <script type="module" src="script.js"></script>
 
 
-    <!-- Firebase SDKs -->
+  <!-- Firebase SDKs -->
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js"></script>
 <script>
-const firebaseConfig = {
+    const firebaseConfig = {
         apiKey: "AIzaSyD8sqRoCqN9Xx-XGhtKSrjFukT8uPI7Bl8",
         authDomain: "jounzarian.firebaseapp.com",
         databaseURL: "https://jounzarian-default-rtdb.firebaseio.com",
@@ -182,6 +182,51 @@ const firebaseConfig = {
 
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
+
+    const newsForm = document.getElementById('news-form');
+    const newsTitle = document.getElementById('news-title');
+    const newsContent = document.getElementById('news-content');
+    const newsList = document.getElementById('news-list');
+
+    // Submit News to Firebase
+    newsForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        const title = newsTitle.value;
+        const content = newsContent.value;
+        
+        const newsRef = database.ref('news');
+        const newNewsRef = newsRef.push();
+        
+        newNewsRef.set({
+            title: title,
+            content: content,
+            timestamp: Date.now()
+        });
+
+        newsTitle.value = '';
+        newsContent.value = '';
+    });
+
+    // Fetch and Display News from Firebase
+    database.ref('news').on('value', (snapshot) => {
+        const newsData = snapshot.val();
+        newsList.innerHTML = '';
+        
+        for (const key in newsData) {
+            const newsItem = newsData[key];
+            const newsElement = document.createElement('div');
+            newsElement.classList.add('news-item');
+            
+            newsElement.innerHTML = `
+                <h3>${newsItem.title}</h3>
+                <p>${newsItem.content}</p>
+                <small>${new Date(newsItem.timestamp).toLocaleString()}</small>
+            `;
+            
+            newsList.appendChild(newsElement);
+        }
+    });
 </script>
 
 </body>
