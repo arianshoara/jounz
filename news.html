@@ -32,9 +32,10 @@
         <a href="index.html" class="back-home">بازگشت</a>
     </div>
 
+    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-analytics.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
+    
     <script>
         // Your web app's Firebase configuration
         const firebaseConfig = {
@@ -50,7 +51,6 @@
 
         // Initialize Firebase
         const app = firebase.initializeApp(firebaseConfig);
-        const analytics = firebase.analytics(app);
         const database = firebase.database(app);
 
         // Function to display news items
@@ -73,19 +73,25 @@
             const title = document.getElementById('news-title').value;
             const content = document.getElementById('news-content').value;
 
+            // Validate input fields
+            if (title.trim() === "" || content.trim() === "") {
+                alert("لطفاً عنوان و متن خبر را وارد کنید.");
+                return;
+            }
+
             const newsItem = { title, content };
 
             // Save data to Firebase
             const newsRef = firebase.database().ref('news/');
             newsRef.push(newsItem)
-                .then(() => console.log("✅ ذخیره‌سازی موفق بود"))
+                .then(() => {
+                    console.log("✅ ذخیره‌سازی موفق بود");
+                    // Display the new news item
+                    displayNewsItem(newsItem);
+                    // Reset the form
+                    document.getElementById('news-form').reset();
+                })
                 .catch((error) => console.error("❌ خطا در ذخیره‌سازی:", error));
-
-            // Display new news item
-            displayNewsItem(newsItem);
-
-            // Reset form
-            document.getElementById('news-form').reset();
         });
 
         // Display stored news items on page load
@@ -96,19 +102,6 @@
                 displayNewsItem(newsItem);
             });
         });
-
-        // Function to go back to home
-        function goHome() {
-            window.location.href = '/';
-        }
     </script>
-
-    <script src="assets/js/jquery.min.js"></script>
-    <script src="assets/js/jquery.scrollex.min.js"></script>
-    <script src="assets/js/jquery.scrolly.min.js"></script>
-    <script src="assets/js/browser.min.js"></script>
-    <script src="assets/js/breakpoints.min.js"></script>
-    <script src="assets/js/util.js"></script>
-    <script src="assets/js/main.js"></script>
 </body>
 </html>
