@@ -76,10 +76,15 @@
             const newsItem = { title, content };
 
             // ذخیره داده در Firebase
-            const newsRef = firebase.database().ref('news/');
-            newsRef.push(newsItem)
-                .then(() => console.log("خبر با موفقیت ذخیره شد!"))
-                .catch((error) => console.error("خطا در ذخیره‌سازی خبر:", error));
+            import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+
+            const database = getDatabase();
+              const newsRef = ref(database, 'news/');
+                push(newsRef, {
+                    title: "خبر تستی",
+            content: "این یک تست برای ذخیره‌سازی است"
+                }).then(() => console.log("✅ ذخیره‌سازی موفق بود"))
+              .catch((error) => console.error("❌ خطا در ذخیره‌سازی:", error));
 
             // نمایش خبر جدید
             displayNewsItem(newsItem);
